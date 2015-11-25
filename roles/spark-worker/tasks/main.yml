@@ -1,0 +1,9 @@
+- name: Download Spark
+  get_url:
+        url: http://d3kbcqa49mib13.cloudfront.net/spark-1.5.2-bin-hadoop2.4.tgz
+        dest: /opt/spark-1.5.2-bin-hadoop2.4.tgz
+- name: Unpack Spark
+  unarchive:
+        src: /opt/spark-1.5.2-bin-hadoop2.4.tgz
+        dest: /opt
+        copy: no

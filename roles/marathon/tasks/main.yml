@@ -1,0 +1,9 @@
+- name: Install Marathon
+  yum:
+    name: marathon
+    state: present
+- name: Enable Marathon
+  service:
+        name: marathon
+        state: started
+        enabled: yes

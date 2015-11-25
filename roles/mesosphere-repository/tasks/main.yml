@@ -1,0 +1,4 @@
+- name: Install Mesosphere repository
+  yum:
+    name: http://repos.mesosphere.com/el/7/noarch/RPMS/mesosphere-el-repo-7-3.noarch.rpm
+    state: present

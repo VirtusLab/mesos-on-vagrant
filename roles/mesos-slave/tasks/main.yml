@@ -1,0 +1,35 @@
+- name: Install Mesos and Docker
+  yum:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - docker
+    - mesos
+- name: Enable Docker containerizer
+  copy:
+        content: "docker,mesos"
+        dest: /etc/mesos-slave/containerizers
+  notify: Restart Mesos
+- name: Increase execution timeout (required by Docker)
+  copy:
+        content: "5mins"
+        dest: /etc/mesos-slave/executor_registration_timeout
+  notify: Restart Mesos
+- name: Configure Mesos to Zookeeper connection
+  template:
+        src: zookeeper-servers.j2 
+        dest: /etc/mesos/zk
+  notify: Restart Mesos
+- name: Configure Mesos IP
+  copy:
+        content: "{{ ansible_eth1.ipv4.address }}"
+        dest: /etc/mesos-slave/ip
+  notify: Restart Mesos
+- name: Enable services
+  service:
+        name: "{{item}}"
+        state: started
+        enabled: yes
+  with_items:
+    - docker
+    - mesos-slave

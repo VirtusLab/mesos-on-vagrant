@@ -1,0 +1,24 @@
+- name: Install Mesos
+  yum:
+    name: mesos
+    state: present
+- name: Configure Mesos to Zookeeper connection
+  template:
+        src: zookeeper-servers.j2 
+        dest: /etc/mesos/zk
+  notify: Restart Mesos
+- name: Configure Mesos cluster name
+  copy:
+        content: vagrant
+        dest: /etc/mesos-master/cluster
+  notify: Restart Mesos
+- name: Configure Mesos IP
+  copy:
+        content: "{{ ansible_eth1.ipv4.address }}"
+        dest: /etc/mesos-master/ip
+  notify: Restart Mesos
+- name: Enable Mesos
+  service:
+        name: mesos-master
+        state: started
+        enabled: yes

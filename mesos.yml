@@ -1,0 +1,26 @@
+- hosts: all
+  sudo: yes
+  tasks:
+        - name: Configure hosts file
+          lineinfile:
+                regexp: "{{item}}"
+                line: "{{hostvars[item]['ansible_eth1']['ipv4']['address']}} {{item}}"
+                dest: /etc/hosts
+          with_items: groups['all']
+        - name: Configure resolv.conf
+          template:
+                src: templates/resolv.conf.j2
+                dest: /etc/resolv.conf
+- hosts: master
+  sudo: yes
+  roles:
+        - zookeeper
+        - mesos-master
+        - chronos
+        - marathon
+
+- hosts: slave
+  sudo: yes
+  roles:
+        - mesos-slave
+        - spark-executor

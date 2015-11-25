@@ -1,0 +1,19 @@
+- name: Install Zookeeper
+  yum:
+    name: mesosphere-zookeeper
+    state: present
+- name: Configure Zookeeper cluster
+  template:
+        src:  zoo.cfg.j2
+        dest: /etc/zookeeper/conf/zoo.cfg
+  notify: Restart Zookeeper
+- name: Configure Zookeeper node id
+  template:
+        src:  myid.j2
+        dest: /var/lib/zookeeper/myid
+  notify: Restart Zookeeper
+- name: Enable Zookeeper
+  service:
+        name: zookeeper
+        state: started
+        enabled: yes
